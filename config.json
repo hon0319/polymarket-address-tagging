@@ -1,0 +1,179 @@
+{
+  "database": {
+    "url": "mysql://user:password@localhost:3306/polymarket",
+    "tables": {
+      "addresses": "addresses",
+      "address_trades": "address_trades",
+      "markets": "markets"
+    },
+    "columns": {
+      "addresses": {
+        "id": "id",
+        "win_rate": "win_rate",
+        "total_trades": "total_trades",
+        "total_volume": "total_volume",
+        "avg_trade_size": "avg_trade_size",
+        "created_at": "created_at",
+        "suspicion_score": "suspicion_score"
+      },
+      "address_trades": {
+        "id": "id",
+        "address_id": "address_id",
+        "market_id": "market_id",
+        "timestamp": "timestamp",
+        "amount": "amount",
+        "side": "side",
+        "price": "price",
+        "pnl": "pnl",
+        "exit_timestamp": "exit_timestamp"
+      },
+      "markets": {
+        "id": "id",
+        "category": "category",
+        "title": "title",
+        "created_at": "created_at",
+        "end_date": "end_date"
+      }
+    }
+  },
+  "tags": {
+    "交易風格": {
+      "高勝率": {
+        "enabled": true,
+        "win_rate_threshold": 0.55,
+        "min_trades": 5
+      },
+      "大交易量": {
+        "enabled": true,
+        "avg_trade_size_threshold": 5000,
+        "min_large_trades": 3,
+        "large_trade_threshold": 5000
+      },
+      "高頻交易": {
+        "enabled": true,
+        "trades_per_day_threshold": 5,
+        "lookback_days": 30
+      },
+      "穩定盈利": {
+        "enabled": true,
+        "min_profitable_months": 2,
+        "min_total_months": 3
+      },
+      "小額多單": {
+        "enabled": true,
+        "max_avg_trade_size": 1000,
+        "min_trades": 20
+      }
+    },
+    "專長類別": {
+      "政治專家": {
+        "enabled": true,
+        "category": "Politics",
+        "ratio_threshold": 0.50,
+        "min_category_trades": 5
+      },
+      "體育專家": {
+        "enabled": true,
+        "category": "Sports",
+        "ratio_threshold": 0.50,
+        "min_category_trades": 5
+      },
+      "加密專家": {
+        "enabled": true,
+        "category": "Crypto",
+        "ratio_threshold": 0.50,
+        "min_category_trades": 5
+      },
+      "娛樂專家": {
+        "enabled": true,
+        "category": "Entertainment",
+        "ratio_threshold": 0.50,
+        "min_category_trades": 5
+      },
+      "經濟專家": {
+        "enabled": true,
+        "category": "Economics",
+        "ratio_threshold": 0.50,
+        "min_category_trades": 5
+      },
+      "選舉專家": {
+        "enabled": true,
+        "parent_category": "Politics",
+        "keywords": ["election", "選舉"],
+        "ratio_threshold": 0.50,
+        "min_category_trades": 5
+      },
+      "NFL專家": {
+        "enabled": true,
+        "parent_category": "Sports",
+        "keywords": ["NFL"],
+        "ratio_threshold": 0.50,
+        "min_category_trades": 5
+      },
+      "NBA專家": {
+        "enabled": true,
+        "parent_category": "Sports",
+        "keywords": ["NBA"],
+        "ratio_threshold": 0.50,
+        "min_category_trades": 5
+      },
+      "足球專家": {
+        "enabled": true,
+        "parent_category": "Sports",
+        "keywords": ["football", "soccer", "足球"],
+        "ratio_threshold": 0.50,
+        "min_category_trades": 5
+      },
+      "全能型": {
+        "enabled": true,
+        "max_category_ratio": 0.40,
+        "min_categories": 3,
+        "min_trades": 15
+      }
+    },
+    "風險偏好": {
+      "低風險": {
+        "enabled": true,
+        "price_threshold_high": 0.75,
+        "price_threshold_low": 0.25,
+        "ratio_threshold": 0.60,
+        "min_trades": 5
+      },
+      "高風險": {
+        "enabled": true,
+        "price_range_low": 0.35,
+        "price_range_high": 0.65,
+        "ratio_threshold": 0.60,
+        "min_trades": 5
+      }
+    },
+    "策略類型": {
+      "掃尾盤": {
+        "enabled": true,
+        "days_before_close": 3,
+        "ratio_threshold": 0.50,
+        "min_trades": 5
+      },
+      "早期進場": {
+        "enabled": true,
+        "hours_after_creation": 48,
+        "ratio_threshold": 0.50,
+        "min_trades": 5
+      }
+    }
+  },
+  "confidence": {
+    "method": "linear",
+    "min_confidence": 0.0,
+    "max_confidence": 1.0
+  },
+  "output": {
+    "format": "database",
+    "create_tables": true,
+    "update_existing": true
+  },
+  "logging": {
+    "level": "INFO",
+    "file": "address_tagging.log"
+  }
+}
