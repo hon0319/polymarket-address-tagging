@@ -1,38 +1,20 @@
 {
   "database": {
-    "url": "mysql://user:password@localhost:3306/polymarket",
+    "url": "mysql://user:password@host:port/database",
     "tables": {
       "addresses": "addresses",
       "address_trades": "address_trades",
-      "markets": "markets"
+      "markets": "markets",
+      "address_tags": "address_tags"
     },
     "columns": {
       "addresses": {
         "id": "id",
+        "address": "address",
         "win_rate": "win_rate",
         "total_trades": "total_trades",
         "total_volume": "total_volume",
-        "avg_trade_size": "avg_trade_size",
-        "created_at": "created_at",
-        "suspicion_score": "suspicion_score"
-      },
-      "address_trades": {
-        "id": "id",
-        "address_id": "address_id",
-        "market_id": "market_id",
-        "timestamp": "timestamp",
-        "amount": "amount",
-        "side": "side",
-        "price": "price",
-        "pnl": "pnl",
-        "exit_timestamp": "exit_timestamp"
-      },
-      "markets": {
-        "id": "id",
-        "category": "category",
-        "title": "title",
-        "created_at": "created_at",
-        "end_date": "end_date"
+        "avg_trade_size": "avg_trade_size"
       }
     }
   },
@@ -45,132 +27,322 @@
       },
       "大交易量": {
         "enabled": true,
-        "avg_trade_size_threshold": 5000,
-        "min_large_trades": 3,
-        "large_trade_threshold": 5000
+        "total_volume_threshold": 5000,
+        "min_trades": 5
       },
       "高頻交易": {
         "enabled": true,
         "trades_per_day_threshold": 5,
-        "lookback_days": 30
+        "min_days": 7
       },
       "穩定盈利": {
         "enabled": true,
-        "min_profitable_months": 2,
-        "min_total_months": 3
+        "win_rate_threshold": 0.55,
+        "min_trades": 10,
+        "consistency_threshold": 0.7
       },
       "小額多單": {
         "enabled": true,
-        "max_avg_trade_size": 1000,
+        "max_avg_trade_size": 500,
         "min_trades": 20
+      },
+      "波段交易者": {
+        "enabled": true,
+        "min_holding_days": 7,
+        "max_holding_days": 30,
+        "min_trades": 5
+      },
+      "長期持有者": {
+        "enabled": true,
+        "min_holding_days": 30,
+        "min_trades": 3
+      },
+      "閃電交易者": {
+        "enabled": true,
+        "max_holding_hours": 24,
+        "min_trades": 10
       }
     },
     "專長類別": {
       "政治專家": {
         "enabled": true,
         "category": "Politics",
-        "ratio_threshold": 0.50,
-        "min_category_trades": 5
+        "category_ratio_threshold": 0.5,
+        "min_trades": 5
       },
       "體育專家": {
         "enabled": true,
         "category": "Sports",
-        "ratio_threshold": 0.50,
-        "min_category_trades": 5
+        "category_ratio_threshold": 0.5,
+        "min_trades": 5
       },
       "加密專家": {
         "enabled": true,
         "category": "Crypto",
-        "ratio_threshold": 0.50,
-        "min_category_trades": 5
+        "category_ratio_threshold": 0.5,
+        "min_trades": 5
+      },
+      "NFL專家": {
+        "enabled": true,
+        "keywords": [
+          "NFL",
+          "Football"
+        ],
+        "keyword_ratio_threshold": 0.5,
+        "min_trades": 5
+      },
+      "NBA專家": {
+        "enabled": true,
+        "keywords": [
+          "NBA",
+          "Basketball"
+        ],
+        "keyword_ratio_threshold": 0.5,
+        "min_trades": 5
       },
       "娛樂專家": {
         "enabled": true,
         "category": "Entertainment",
-        "ratio_threshold": 0.50,
-        "min_category_trades": 5
+        "category_ratio_threshold": 0.5,
+        "min_trades": 5
       },
       "經濟專家": {
         "enabled": true,
-        "category": "Economics",
-        "ratio_threshold": 0.50,
-        "min_category_trades": 5
+        "keywords": [
+          "Economy",
+          "Inflation",
+          "GDP",
+          "Interest Rate"
+        ],
+        "keyword_ratio_threshold": 0.5,
+        "min_trades": 5
       },
       "選舉專家": {
         "enabled": true,
-        "parent_category": "Politics",
-        "keywords": ["election", "選舉"],
-        "ratio_threshold": 0.50,
-        "min_category_trades": 5
-      },
-      "NFL專家": {
-        "enabled": true,
-        "parent_category": "Sports",
-        "keywords": ["NFL"],
-        "ratio_threshold": 0.50,
-        "min_category_trades": 5
-      },
-      "NBA專家": {
-        "enabled": true,
-        "parent_category": "Sports",
-        "keywords": ["NBA"],
-        "ratio_threshold": 0.50,
-        "min_category_trades": 5
+        "keywords": [
+          "Election",
+          "Vote",
+          "President",
+          "Governor"
+        ],
+        "keyword_ratio_threshold": 0.5,
+        "min_trades": 5
       },
       "足球專家": {
         "enabled": true,
-        "parent_category": "Sports",
-        "keywords": ["football", "soccer", "足球"],
-        "ratio_threshold": 0.50,
-        "min_category_trades": 5
+        "keywords": [
+          "Soccer",
+          "Premier League",
+          "Champions League"
+        ],
+        "keyword_ratio_threshold": 0.5,
+        "min_trades": 5
       },
       "全能型": {
         "enabled": true,
-        "max_category_ratio": 0.40,
+        "max_single_category_ratio": 0.4,
         "min_categories": 3,
-        "min_trades": 15
-      }
-    },
-    "風險偏好": {
-      "低風險": {
-        "enabled": true,
-        "price_threshold_high": 0.75,
-        "price_threshold_low": 0.25,
-        "ratio_threshold": 0.60,
-        "min_trades": 5
-      },
-      "高風險": {
-        "enabled": true,
-        "price_range_low": 0.35,
-        "price_range_high": 0.65,
-        "ratio_threshold": 0.60,
-        "min_trades": 5
+        "min_trades": 10
       }
     },
     "策略類型": {
       "掃尾盤": {
         "enabled": true,
-        "days_before_close": 3,
-        "ratio_threshold": 0.50,
+        "price_threshold": 0.9,
+        "high_price_ratio_threshold": 0.5,
+        "min_trades": 5
+      },
+      "逆勢操作": {
+        "enabled": true,
+        "contrarian_ratio_threshold": 0.5,
+        "min_trades": 10
+      },
+      "順勢操作": {
+        "enabled": true,
+        "momentum_ratio_threshold": 0.5,
+        "min_trades": 10
+      },
+      "價值捕手": {
+        "enabled": true,
+        "undervalued_min": 0.2,
+        "undervalued_max": 0.4,
+        "overvalued_min": 0.6,
+        "overvalued_max": 0.8,
+        "value_ratio_threshold": 0.5,
         "min_trades": 5
       },
       "早期進場": {
         "enabled": true,
-        "hours_after_creation": 48,
-        "ratio_threshold": 0.50,
+        "early_entry_days": 7,
+        "early_ratio_threshold": 0.5,
         "min_trades": 5
+      },
+      "套利者": {
+        "enabled": true,
+        "arbitrage_ratio_threshold": 0.3,
+        "min_trades": 10
+      },
+      "事件驅動": {
+        "enabled": true,
+        "event_ratio_threshold": 0.4,
+        "min_trades": 5
+      },
+      "對沖交易者": {
+        "enabled": true,
+        "hedge_ratio_threshold": 0.3,
+        "min_trades": 10
+      },
+      "做市商": {
+        "enabled": true,
+        "buy_sell_ratio_threshold": 0.8,
+        "min_volume": 50000,
+        "min_trades": 20
+      },
+      "趨勢追蹤者": {
+        "enabled": true,
+        "trend_ratio_threshold": 0.5,
+        "min_trades": 10
+      },
+      "均值回歸者": {
+        "enabled": true,
+        "mean_reversion_ratio_threshold": 0.5,
+        "min_trades": 10
+      },
+      "狙擊手": {
+        "enabled": true,
+        "max_trades": 20,
+        "min_avg_trade_size": 5000,
+        "min_win_rate": 0.7
+      }
+    },
+    "風險偏好": {
+      "低風險": {
+        "enabled": true,
+        "price_threshold": 0.7,
+        "high_prob_ratio_threshold": 0.6,
+        "min_trades": 5
+      },
+      "高風險": {
+        "enabled": true,
+        "price_threshold": 0.3,
+        "low_prob_ratio_threshold": 0.5,
+        "min_trades": 5
+      },
+      "均衡型": {
+        "enabled": true,
+        "price_range_min": 0.3,
+        "price_range_max": 0.7,
+        "price_ratio_threshold": 0.5,
+        "holding_days_min": 7,
+        "holding_days_max": 30,
+        "min_trades": 5
+      },
+      "Degen": {
+        "enabled": true,
+        "price_threshold": 0.1,
+        "extreme_low_ratio_threshold": 0.3,
+        "min_trades": 5
+      },
+      "保守型": {
+        "enabled": true,
+        "price_threshold": 0.7,
+        "high_prob_ratio_threshold": 0.6,
+        "min_holding_days": 14,
+        "min_trades": 5
+      },
+      "激進型": {
+        "enabled": true,
+        "price_threshold": 0.3,
+        "low_prob_ratio_threshold": 0.5,
+        "max_holding_days": 7,
+        "min_trades": 5
+      }
+    },
+    "特殊標記": {
+      "疑似內線": {
+        "enabled": true,
+        "min_win_rate": 0.8,
+        "early_trade_ratio_threshold": 0.3,
+        "min_trades": 10
+      },
+      "新聞追蹤": {
+        "enabled": true,
+        "news_ratio_threshold": 0.4,
+        "min_trades": 5
+      },
+      "名人": {
+        "enabled": true,
+        "min_followers": 10000
+      },
+      "機器人/腳本": {
+        "enabled": true,
+        "max_time_variance": 1000,
+        "max_unique_amounts": 5,
+        "max_response_time": 10
+      },
+      "多帳號操作": {
+        "enabled": true,
+        "min_linked_accounts": 2
+      },
+      "市場操縱嫌疑": {
+        "enabled": true,
+        "large_trade_threshold": 50000,
+        "large_trade_ratio_threshold": 0.5,
+        "reverse_op_ratio_threshold": 0.3,
+        "min_trades": 10
+      },
+      "專業機構": {
+        "enabled": true,
+        "min_total_volume": 500000,
+        "min_win_rate": 0.65,
+        "min_trades": 50
+      },
+      "新手": {
+        "enabled": true,
+        "max_days_since_first_trade": 30,
+        "max_trades": 10
+      },
+      "休眠喚醒": {
+        "enabled": true,
+        "min_dormant_days": 90,
+        "min_recent_trades": 10
+      },
+      "單一市場專注": {
+        "enabled": true,
+        "focus_ratio_threshold": 0.9,
+        "min_trades": 10
+      }
+    },
+    "社交影響力": {
+      "KOL": {
+        "enabled": true,
+        "min_followers": 50000,
+        "min_mentions": 100
+      },
+      "社群領袖": {
+        "enabled": true,
+        "min_discord_messages": 50,
+        "min_mentions": 20
+      },
+      "跟單目標": {
+        "enabled": true,
+        "min_win_rate": 0.7,
+        "min_total_volume": 100000,
+        "min_trades": 20
+      },
+      "隱形巨鯨": {
+        "enabled": true,
+        "min_total_volume": 1000000,
+        "min_win_rate": 0.65,
+        "max_followers": 1000,
+        "max_mentions": 10
       }
     }
   },
   "confidence": {
     "method": "linear",
-    "min_confidence": 0.0,
-    "max_confidence": 1.0
-  },
-  "output": {
-    "format": "database",
-    "create_tables": true,
-    "update_existing": true
+    "min_score": 0.0,
+    "max_score": 1.0
   },
   "logging": {
     "level": "INFO",
